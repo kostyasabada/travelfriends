@@ -1,0 +1,54 @@
+version: "3.7"
+
+services:
+  client:
+    container_name: messenger_client
+    build:
+      context: ./client
+      dockerfile: dev.Dockerfile
+    logging:
+      options:
+        max-size: 10m
+    command: npm start -- --host 0.0.0.0 --poll 1 --proxy-config ./proxy.docker.conf.json
+    networks:
+      - messenger
+    volumes:
+      - ./client:/app:delegated
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+
+  server:
+    container_name: messenger_server
+    build:
+      context: ./server
+      dockerfile: dev.Dockerfile
+    logging:
+      options:
+        max-size: 10mb
+    command: npm run start:dev -- --env=${env}
+    # command: npm run start
+    networks:
+      - messenger
+    volumes:
+      - ./server:/app:delegated
+      - /app/node_modules
+    ports:
+      - "8081:8081"
+
+  # db-integrator-helper:
+  #   container_name: "integrator_tool_db"
+  #   image: postgres:11
+  #   ports:
+  #     - "5436:5432"
+  #   environment:
+  #     POSTGRES_DB: app_db
+  #     POSTGRES_USER: app_user
+  #     POSTGRES_PASSWORD: password
+  #   networks:
+  #     - travelfriends
+  #   volumes:
+  #     - "./database/data/:/var/lib/postgresql/data:z"
+
+networks:
+  messenger:

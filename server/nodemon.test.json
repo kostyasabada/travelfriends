@@ -1,0 +1,5 @@
+{
+  "watch": ["spec"],
+  "ext": "spec.ts",
+  "exec": "nyc ts-node -r ./node_modules/tsconfig-paths/register ./spec"
+}

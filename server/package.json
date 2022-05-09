@@ -1,0 +1,53 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./util/build.js",
+    "lint": "eslint . --ext .ts",
+    "start": "node -r module-alias/register ./dist",
+    "start:dev": "nodemon --config nodemon.json",
+    "test:dev": "nodemon --config nodemon.test.json",
+    "test": "nyc ts-node -r ./node_modules/tsconfig-paths/register ./spec"
+  },
+  "_moduleAliases": {
+    "@server": "dist/Server",
+    "@services": "dist/services",
+    "@interfaces": "dist/interfaces",
+    "@entities": "dist/entities",
+    "@models": "dist/database/models",
+    "@middlewares": "dist/middlewares",
+    "@enums": "dist/enums",
+    "@types": "dist/@types",
+    "@controllers": "dist/routes",
+    "@repositories": "dist/database/repositories"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "chalk": "^4.1.2",
+    "command-line-args": "^5.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "http-status-codes": "^2.1.4",
+    "inversify": "^6.0.1",
+    "module-alias": "^2.2.2",
+    "normalize-url": "^7.0.2",
+    "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@types/command-line-args": "^5.2.0",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.4",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.4"
+  }
+}
