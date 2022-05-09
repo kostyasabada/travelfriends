@@ -6,6 +6,7 @@ import cors from 'cors';
 import { errorMiddleware } from './middlewares/error';
 import { IController } from './interfaces';
 import { TYPES } from './@types';
+import mongoose from 'mongoose';
 
 @injectable()
 class Server {
@@ -44,13 +45,21 @@ class Server {
   }
 
   async start() {
-    // Create and start the server
+    try{
+      // Create and start the server
 
-    const port = Number(process.env.PORT || 8081);
+      await mongoose.connect('mongodb+srv://kostya:s1a2b3@cluster0.j2sls.mongodb.net/users', {})
 
-    this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware).listen(port, () => {
-      console.log(`${chalk.green('Express server started')} on port: ${port}`);
+      const port = Number(process.env.PORT || 8081);
+
+      this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware).listen(port, () => {
+        console.log(`${chalk.green('Express server started')} on port: ${port}`);
     });
+    } catch (e) {
+      console.log(e);
+      
+    }
+
   }
 }
 

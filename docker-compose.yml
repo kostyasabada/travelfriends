@@ -10,6 +10,8 @@ services:
       options:
         max-size: 10m
     command: npm start -- --host 0.0.0.0 --poll 1 --proxy-config ./proxy.docker.conf.json
+    # command: npm start
+
     networks:
       - messenger
     volumes:
@@ -34,7 +36,7 @@ services:
       - ./server:/app:delegated
       - /app/node_modules
     ports:
-      - "8081:8081"
+      - "8081:8080"
 
   # db-integrator-helper:
   #   container_name: "integrator_tool_db"

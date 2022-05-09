@@ -9,24 +9,17 @@ import { IController } from "@interfaces";
 @injectable()
 class BaseController implements IController {
     private _router = Router();
-    // private _adminController: IController;
-    // private _authController: IController;
-    // private _gitController: IController;
-    // private _integratorController: IController;
-    // private _authMiddleware: IAuthMiddleware;
+
+    private _authController: IController;
+
 
     constructor(
-        // @inject(TYPES.AdminController) adminController: IController,
-        // @inject(TYPES.AuthController) authController: IController,
-        // @inject(TYPES.GitController) gitController: IController,
-        // @inject(TYPES.IntegratorController) integratorController: IController,
-        // @inject(TYPES.AuthMiddleware) authMiddleware: IAuthMiddleware,
+
+        @inject(TYPES.AuthController) authController: IController,
+
     ) {
-        // this._adminController = adminController;
-        // this._authController = authController;
-        // this._gitController = gitController;
-        // this._integratorController = integratorController;
-        // this._authMiddleware = authMiddleware;
+
+        this._authController = authController;
 
         this.initRoutes();
     }
@@ -36,10 +29,9 @@ class BaseController implements IController {
     }
 
     initRoutes() {
-        // this._router.use('/git', this._authMiddleware.authOnly, this._gitController.getRouter());
-        // this._router.use('/integrator', this._authMiddleware.authOnly, this._integratorController.getRouter());
-        // this._router.use('/auth', this._authController.getRouter());
-        // this._router.use('/admin', this._adminController.getRouter());
+
+        this._router.use('/auth', this._authController.getRouter());
+
     }
 }
 
