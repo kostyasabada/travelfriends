@@ -4,7 +4,7 @@ const TYPES = {
   ConnectionProvider: Symbol.for('ConnectionProvider'),
 
   BaseController: Symbol.for('BaseController'),
-  AuthController: Symbol.for('AuthController'),
+  UserController: Symbol.for('UserController'),
 };
 
 

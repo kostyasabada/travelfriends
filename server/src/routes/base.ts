@@ -9,17 +9,16 @@ import { IController } from "@interfaces";
 @injectable()
 class BaseController implements IController {
     private _router = Router();
-
-    private _authController: IController;
+    private _userController: IController;
 
 
     constructor(
 
-        @inject(TYPES.AuthController) authController: IController,
+        @inject(TYPES.UserController) userController: IController,
 
     ) {
 
-        this._authController = authController;
+        this._userController = userController;
 
         this.initRoutes();
     }
@@ -29,9 +28,7 @@ class BaseController implements IController {
     }
 
     initRoutes() {
-
-        this._router.use('/auth', this._authController.getRouter());
-
+        this._router.use('/user', this._userController.getRouter());
     }
 }
 

@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 
 import {
-    AuthController,
+    UserController,
     BaseController,
 } from '@controllers';
 import { TYPES } from '@types';
@@ -12,7 +12,7 @@ const diContainer = new Container();
 
 
 
-diContainer.bind<IController>(TYPES.AuthController).to(AuthController);
+diContainer.bind<IController>(TYPES.UserController).to(UserController);
 
 diContainer.bind<IController>(TYPES.BaseController).to(BaseController);
 

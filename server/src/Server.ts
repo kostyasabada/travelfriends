@@ -48,7 +48,7 @@ class Server {
     try{
       // Create and start the server
 
-      await mongoose.connect('mongodb+srv://kostya:s1a2b3@cluster0.j2sls.mongodb.net/users', {})
+      // await mongoose.connect('mongodb+srv://kostya:s1a2b3@cluster0.j2sls.mongodb.net/users', {})
 
       const port = Number(process.env.PORT || 8081);
 

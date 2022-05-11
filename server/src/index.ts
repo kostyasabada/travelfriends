@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import commandLineArgs from 'command-line-args';
-// import Database from './database/Database';
+import Database from './database/Database';
 import loadEnv from './LoadEnv';
 import { IServer } from './Server';
 import { TYPES } from './@types';
@@ -24,7 +24,13 @@ loadEnv(
     const server = diContainer.get<IServer>(TYPES.Server);
     server.start();
   }
-  Start()
+
+  Database.createConnection().then(async () => {
+    Start();
+    Database.insertDBRecords();
+  })
+
+  // Start()
 //    Database.createConnection().then(async () => {
 //    const diContainer = await (await import('./inversify.config')).diContainer;
 //    const server = diContainer.get<IServer>(TYPES.Server);

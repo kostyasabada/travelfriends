@@ -1,5 +1,8 @@
 <div class="container">
   <header class="jumbotron">
-    <p>{{ content }}</p>
+    <ul>
+      <li *ngFor="let user of users">
+        <button class="user-button">{{ user.name }}</button></li>
+    </ul>
   </header>
 </div>
