@@ -6,7 +6,7 @@ import cors from 'cors';
 import { errorMiddleware } from './middlewares/error';
 import { IController } from './interfaces';
 import { TYPES } from './@types';
-import mongoose from 'mongoose';
+import ServerSocket from './ServerSocket'
 
 @injectable()
 class Server {
@@ -52,9 +52,11 @@ class Server {
 
       const port = Number(process.env.PORT || 8081);
 
-      this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware).listen(port, () => {
+      new ServerSocket(this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware).listen(port, () => {
         console.log(`${chalk.green('Express server started')} on port: ${port}`);
-    });
+    }))
+
+    
     } catch (e) {
       console.log(e);
       

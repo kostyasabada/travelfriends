@@ -9,9 +9,8 @@ import User from './models/user';
 class Database {
     async createConnection() {
         try {
-          const conection = await mongoose.connect('mongodb+srv://kostya:s1a2b3@cluster0.j2sls.mongodb.net/users', {});
+          const conection = await mongoose.connect('mongodb+srv://kostya:s1a2b3@cluster0.j2sls.mongodb.net/chat', {});
 
-          console.log('13conection:::', conection);
           
 
 
@@ -41,7 +40,7 @@ class Database {
     async insertDBRecords(): Promise<void> {
 
       const users = await User.find({});
-      console.log('USers::::', users);
+
 
       // if (users.length === 0) {
       //       const { GLOBAL_ADMIN_ROLE, GLOBAL_ADMIN_NAME, GLOBAL_ADMIN_PASSWORD } = process.env;

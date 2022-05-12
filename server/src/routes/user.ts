@@ -82,9 +82,6 @@ class UserController implements IController {
           emai: user.email
         }
       })
-      
-      console.log(78, users);
-      
 
       return res.json(users)
     } catch (err: any) {
