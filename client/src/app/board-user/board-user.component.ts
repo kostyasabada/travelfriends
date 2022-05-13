@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
+import { webSocket } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-board-user',
@@ -25,6 +26,12 @@ export class BoardUserComponent implements OnInit {
       this.users = users
       
     })
+ 
+  // const subject = webSocket('ws://server:8080');
+  
+  // subject.subscribe();
+  // console.log(subject);
+  
 
     // this.userService.getUserBoard().subscribe(
     //   data => {

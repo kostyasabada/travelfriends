@@ -2,11 +2,12 @@ import express, { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import chalk from 'chalk';
 import cors from 'cors';
+import { createServer } from 'http';
 
 import { errorMiddleware } from './middlewares/error';
 import { IController } from './interfaces';
 import { TYPES } from './@types';
-import ServerSocket from './ServerSocket'
+import ServerSocket from './ServerSocket';
 
 @injectable()
 class Server {
@@ -48,13 +49,16 @@ class Server {
     try{
       // Create and start the server
 
-      // await mongoose.connect('mongodb+srv://kostya:s1a2b3@cluster0.j2sls.mongodb.net/users', {})
 
       const port = Number(process.env.PORT || 8081);
 
-      new ServerSocket(this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware).listen(port, () => {
-        console.log(`${chalk.green('Express server started')} on port: ${port}`);
-    }))
+      const app = this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware);
+      
+      
+      const server = createServer(app);
+      const socket = new ServerSocket(server);
+
+      server.listen(port, () => {console.log(`${chalk.green('Express server started')} on port: ${port}`)})
 
     
     } catch (e) {

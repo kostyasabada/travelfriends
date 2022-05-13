@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UrlsService } from './urls.service';
+import { Socket } from 'ngx-socket-io';
+
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,6 +16,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private urlsService: UrlsService,
+    private socket: Socket
     ) { }
 
   login(username: string, password: string): Observable<any> {

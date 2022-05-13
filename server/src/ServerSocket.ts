@@ -1,37 +1,46 @@
+
 import { Server } from 'socket.io';
     
 class SocketServer {
   socket: any
   constructor(server: any) {
-    const io = new Server(server);
+    const io = new Server(server,
+      {
+        path: '/socket',
 
-    // this.socket = io.of('/session').on('connection', (socket: any) => {
+        // cors: {
+        //   origin: '*',
+        //   methods: ["GET", "POST"],
+        //   allowedHeaders: ['Access-Control-Allow-Origin'],
+        //   credentials: false
+        // },
+        // allowEIO3: true
+      },
+      
+    );
+
+    console.log('SocketServer::::');
+    
     this.socket = io.on('connection', (socket: any) => {
 
       console.log('IO Connected');
-      
-      const chatApiInstance = JSON.parse(
-        socket.handshake.query.chatApiInstance
-      );
 
-      if (chatApiInstance) {
-        socket.join(chatApiInstance);
-      }
+      socket.emit('newMessage', {
+        text: 'WHAT'
+      })
     });
 
-    console.log('this.socket:::::', this.socket);
-    
   }
 
-  onNewMessage(chatApiInstance: any, message: any) {
+  // onNewMessage(chatApiInstance: any, message: any) {
   
-    this.socket.to(chatApiInstance).emit('newMessage', JSON.stringify(message));
-  }
+  //   this.socket.to(chatApiInstance).emit('newMessage', JSON.stringify(message));
+  // }
 
-  onStatusUpdate(chatApiInstance: any, status: any) {
+  // onStatusUpdate(chatApiInstance: any, status: any) {
 
-    this.socket.to(chatApiInstance).emit('statusChange', status);
-  }
+  //   this.socket.to(chatApiInstance).emit('statusChange', status);
+  // }
 }
 
 export default SocketServer;
