@@ -1,8 +1,13 @@
 import { Injectable, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,14 +47,21 @@ const config: SocketIoConfig = { url: '',
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    BoardUserComponent
+    BoardUserComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    SocketIoModule.forRoot(config)
+    MatDialogModule,
+    MatSidenavModule,
+    BrowserAnimationsModule,
+    SocketIoModule.forRoot(config),
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

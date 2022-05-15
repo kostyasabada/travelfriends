@@ -1,12 +1,12 @@
 import { Schema, model } from "mongoose";
 
-const user = new Schema({
+const message = new Schema({
   message: String,
   sender: String,
   reciever: String,
   date: Date
 })
 
-const User =  model('User', user);
+const Message =  model('Message', message);
 
-export default User;
+export default Message;

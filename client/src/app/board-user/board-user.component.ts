@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
-import { webSocket } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-board-user',
@@ -11,35 +11,53 @@ import { webSocket } from 'rxjs/webSocket';
 export class BoardUserComponent implements OnInit {
   users?: any;
   currentUser: any
+  selectedUser: any = null;
+
+
+  chatData?: Array<any>;
+  message?: String;
+  session: any;
+  dialogId: any;
+  userDetails: any;
+  messageObj: any;
 
   constructor(
     private token: TokenStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private socket: Socket
     ) { }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
-    console.log(this.currentUser);
 
     this.userService.userList().subscribe((users) => {
-      console.log(users);
-      this.users = users
+      this.users = users.filter((user:any) => user.name !== this.currentUser.name)
       
     })
- 
-  // const subject = webSocket('ws://server:8080');
-  
-  // subject.subscribe();
-  // console.log(subject);
-  
+  }
 
-    // this.userService.getUserBoard().subscribe(
-    //   data => {
-    //     this.content = data;
-    //   },
-    //   err => {
-    //     this.content = JSON.parse(err.error).message;
-    //   }
-    // );
+
+  onUserSelect(connectedUser: any) {
+    this.selectedUser = connectedUser;
+  }
+
+  onEnter(selectedUseName: any, message: any) {
+    console.log(selectedUseName, message);
+
+    this.messageObj = {
+      message,
+      sender: this.currentUser.name,
+      reciever: selectedUseName,
+      date: Date.now()
+    }
+
+    console.log(this.messageObj);
+
+    this.socket.on('newMessage', (data: any) => {
+      console.log(data);
+      
+    })
+
+    this.message = '';
   }
 }

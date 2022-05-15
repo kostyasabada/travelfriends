@@ -11,6 +11,7 @@ import ServerSocket from './ServerSocket';
 
 @injectable()
 class Server {
+  Socket: any
   private _baseRouter: IController;
 
 
@@ -56,7 +57,7 @@ class Server {
       
       
       const server = createServer(app);
-      const socket = new ServerSocket(server);
+      this.Socket = new ServerSocket(server);
 
       server.listen(port, () => {console.log(`${chalk.green('Express server started')} on port: ${port}`)})
 
@@ -72,6 +73,7 @@ class Server {
 export interface IServer {
   createApp(app: any, baseRouter: Router, errorMiddleware: any): any;
   start(): Promise<void>;
+  Socket: any
 }
 
 export { Server };

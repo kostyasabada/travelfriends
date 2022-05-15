@@ -1,8 +1,40 @@
-<div class="container">
-  <header class="jumbotron">
-    <ul>
-      <li *ngFor="let user of users">
-        <button class="user-button">{{ user.name }}</button></li>
-    </ul>
-  </header>
+<div class="home-container col-md-12">
+  <div class="row">
+    <!--Contacts List-->
+    <div class="col-4">
+      <div class="row contacts">
+        Contacts
+      </div>
+      <div *ngFor="let user of users">
+        <div class="row contact-container" (click)="onUserSelect(user)">
+          <div class="col-9">
+            <div class="name">{{user.name}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Message Dialog box-->
+    <div class="col-8 message-container" *ngIf="selectedUser">
+      <div class="recepient">
+        <span> {{selectedUser.name}}</span>
+      </div>
+      <div class="messages-list">
+        <div *ngFor="let item of chatData" class="message">
+           <div class="{{ (item.sender_id == session.user_id) ? 'right-msg' : 'left-msg'}}">
+            {{item.message}}
+            <!--<i *ngIf="item.sender_id == session.user_id" class="fa fa-check-square {{ (item.read > 0) ? 'read': 'unread' }}"></i>            -->
+            </div>
+        </div>
+      </div>
+      <div class="input-msg">
+        <div class="form-group">
+          <input (keyup.enter)="onEnter(selectedUser.name, message)" type="text" class="form-control" [(ngModel)]="message" placeholder="Type a Message">
+        </div>
+      </div>
+    </div>
+    <div class="col-8 no-messages-box" [hidden]="selectedUser">
+      Go ahead & select a contact!
+    </div>
+  </div>
 </div>
