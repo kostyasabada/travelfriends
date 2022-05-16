@@ -53,10 +53,14 @@ export class BoardUserComponent implements OnInit {
 
     console.log(this.messageObj);
 
-    this.socket.on('newMessage', (data: any) => {
-      console.log(data);
+    // this.socket.on('newMessage', (data: any) => {
+    //   console.log(data);
       
-    })
+    // })
+    // this.socket.on('onlineUsers', (users: any) => {
+    //   console.log(users);
+      
+    // })
 
     this.message = '';
   }

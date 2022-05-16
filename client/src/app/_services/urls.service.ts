@@ -8,7 +8,7 @@ const apiRoot = 'api';
 export class UrlsService {
   readonly Api = {
     // Auth
-    LOGIN: `${apiRoot}/user/login`,
+    // LOGIN: `${apiRoot}/user/login`,
     SIGNUP: `${apiRoot}/user/signup`,
     USERLIST: `${apiRoot}/user/userlist`,
 

@@ -7,18 +7,21 @@ import { createServer } from 'http';
 import { errorMiddleware } from './middlewares/error';
 import { IController } from './interfaces';
 import { TYPES } from './@types';
-import ServerSocket from './ServerSocket';
+import { ISocketService } from './services/socket';
 
 @injectable()
 class Server {
   Socket: any
   private _baseRouter: IController;
-
+  private _socketService: ISocketService;
 
   constructor(
     @inject(TYPES.BaseController) baseRouter: IController,
+    @inject(TYPES.SocketService) socketService: ISocketService,
+
   ) {
     this._baseRouter = baseRouter;
+    this._socketService = socketService;
   }
 
 
@@ -50,18 +53,16 @@ class Server {
     try{
       // Create and start the server
 
-
       const port = Number(process.env.PORT || 8081);
 
       const app = this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware);
-      
-      
+
       const server = createServer(app);
-      this.Socket = new ServerSocket(server);
+
+      this.Socket = await this._socketService.createSocketServer(server);
 
       server.listen(port, () => {console.log(`${chalk.green('Express server started')} on port: ${port}`)})
 
-    
     } catch (e) {
       console.log(e);
       

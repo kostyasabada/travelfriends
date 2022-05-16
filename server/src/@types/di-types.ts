@@ -5,6 +5,9 @@ const TYPES = {
 
   BaseController: Symbol.for('BaseController'),
   UserController: Symbol.for('UserController'),
+
+  SocketService: Symbol.for('SocketService'),
+  UserService: Symbol.for('UserService'),
 };
 
 
