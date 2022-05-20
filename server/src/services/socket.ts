@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { Server } from 'socket.io';
 import { IUserService } from './user';
 import { TYPES } from '@types';
+import User from 'src/database/models/user';
 
 export interface ISocketService {
   socket: any;
@@ -30,6 +31,15 @@ class SocketService implements ISocketService {
     // const onlineUsers = [] as any;
 
     console.log('SocketServer::::');
+
+    const fetchedUsers = await User.find();
+
+    const users = fetchedUsers.map(user => {
+      return {
+        name: user.name,
+        emai: user.email
+      }
+    })
     
     this.socket = io.on('connection', (socket: any) => {
 
@@ -46,6 +56,22 @@ class SocketService implements ISocketService {
         // console.log('46onlineUsers:::', updatedOnlineUsers);
         
         // socket.emit('onlineUsers', updatedOnlineUsers)
+      })
+
+
+
+      socket.on('get_user_list', async () => {
+        console.log('get_user_list:::::::;');
+        // const fetchedUsers = await User.find();
+
+
+        // const users = fetchedUsers.map(user => {
+        //   return {
+        //     name: user.name,
+        //     emai: user.email
+        //   }
+        // })
+        socket.emit('got_user_list', users)
       })
 
     });

@@ -30,10 +30,22 @@ export class BoardUserComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
 
-    this.userService.userList().subscribe((users) => {
-      this.users = users.filter((user:any) => user.name !== this.currentUser.name)
-      
-    })
+    this.userService.userList();
+
+    this.userService.onlineUsersSubject.subscribe(
+      (data: any) => {
+        console.log(data);
+        // window.location.reload();
+        if (data) {
+          this.users = data.filter((user:any) => user.name !== this.currentUser.name)
+
+        } else {
+          // this.errorMessage = 'Not found';
+          // this.isLoginFailed = true;
+        }
+
+      }
+    );
   }
 
 

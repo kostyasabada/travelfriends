@@ -14,6 +14,8 @@ const httpOptions = {
 })
 export class UserService {
   loginnedUserSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+  onlineUsersSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+
 
   constructor(
     private http: HttpClient,
@@ -27,7 +29,7 @@ export class UserService {
       password
     });
 
-    this.socket.once('user_is_loginned', (loginedUser: any) => {
+    this.socket.on('user_is_loginned', (loginedUser: any) => {
       console.log(1);
       
       this.loginnedUserSubject.next(loginedUser);
@@ -43,7 +45,12 @@ export class UserService {
     }, httpOptions);
   }
 
-  userList(): Observable<any> {
-    return this.http.get(this.urlsService.Api.USERLIST);
+  userList() {
+    // return this.http.get(this.urlsService.Api.USERLIST);
+    this.socket.emit('get_user_list');
+
+    this.socket.on('got_user_list', (users: any) => {
+      this.onlineUsersSubject.next(users);
+    })
   }
 }
