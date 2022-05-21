@@ -30,9 +30,11 @@ export class UserService {
     });
 
     this.socket.on('user_is_loginned', (loginedUser: any) => {
-      console.log(1);
-      
       this.loginnedUserSubject.next(loginedUser);
+    })
+
+    this.socket.on('user_not_found', () => {
+      this.loginnedUserSubject.next(null)
     })
 
   }
@@ -46,11 +48,14 @@ export class UserService {
   }
 
   userList() {
-    // return this.http.get(this.urlsService.Api.USERLIST);
     this.socket.emit('get_user_list');
 
     this.socket.on('got_user_list', (users: any) => {
       this.onlineUsersSubject.next(users);
     })
+  }
+
+  logOut(user: any) {
+    this.socket.emit('user_logout', user.name)
   }
 }

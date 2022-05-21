@@ -46,10 +46,12 @@ class SocketService implements ISocketService {
 
       userSocket.on('user_login', async (credentials:any) => {
         const user = await this._userService.loginUser(credentials);
-        userSocket.userId = user.name;
         if(!user) {
-          userSocket
+          userSocket.emit('user_not_found', 'user_not_found');
+          return;
         }
+
+        userSocket.userId = user.name;
         users = users.map((man) => {
           if (man.name === user.name) {
             return {
@@ -59,24 +61,47 @@ class SocketService implements ISocketService {
           } else {
             return man
           }
-        })
+        });
 
 
         userSocket.emit('user_is_loginned', user);
-
-        this.socket.emit('got_user_list', users)
+        this.socket.emit('got_user_list', users);
       })
 
 
 
       userSocket.on('get_user_list', async () => {
-
         userSocket.emit('got_user_list', users)
       })
 
+      userSocket.on('user_logout', (userName: string) => {
+        users = users.map((man) => {
+          if (man.name === userName) {
+            return {
+              ...man,
+              online: false
+            }
+          } else {
+            return man
+          }
+        });
+      });
 
-      userSocket.on('disconnect', async (event: any) =>{
-        console.log('user disconnected', userSocket.userId);
+
+      userSocket.on('disconnect', async () => {
+
+        users = users.map((man) => {
+          if (man.name === userSocket.userId) {
+            return {
+              ...man,
+              online: false
+            }
+          } else {
+            return man
+          }
+        });
+
+        this.socket.emit('got_user_list', users);
       });
 
     });
