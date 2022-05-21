@@ -28,51 +28,56 @@ class SocketService implements ISocketService {
       
     );
 
-    // const onlineUsers = [] as any;
-
     console.log('SocketServer::::');
 
     const fetchedUsers = await User.find();
 
-    const users = fetchedUsers.map(user => {
+    let users = fetchedUsers.map(user => {
       return {
         name: user.name,
-        emai: user.email
+        emai: user.email,
+        online: false
       }
     })
     
-    this.socket = io.on('connection', (socket: any) => {
+    this.socket = io.on('connection', (userSocket: any) => {
 
       console.log('IO Connected');
 
-      socket.on('user_login', async (credentials:any) => {
+      userSocket.on('user_login', async (credentials:any) => {
         const user = await this._userService.loginUser(credentials);
+        userSocket.userId = user.name;
         if(!user) {
-          socket
+          userSocket
         }
+        users = users.map((man) => {
+          if (man.name === user.name) {
+            return {
+              ...man,
+              online: true
+            }
+          } else {
+            return man
+          }
+        })
 
-        socket.emit('user_is_loginned', user)
-        // const updatedOnlineUsers = [...onlineUsers, user]
-        // console.log('46onlineUsers:::', updatedOnlineUsers);
-        
-        // socket.emit('onlineUsers', updatedOnlineUsers)
+
+        userSocket.emit('user_is_loginned', user);
+
+        this.socket.emit('got_user_list', users)
       })
 
 
 
-      socket.on('get_user_list', async () => {
-        console.log('get_user_list:::::::;');
-        // const fetchedUsers = await User.find();
+      userSocket.on('get_user_list', async () => {
 
-
-        // const users = fetchedUsers.map(user => {
-        //   return {
-        //     name: user.name,
-        //     emai: user.email
-        //   }
-        // })
-        socket.emit('got_user_list', users)
+        userSocket.emit('got_user_list', users)
       })
+
+
+      userSocket.on('disconnect', async (event: any) =>{
+        console.log('user disconnected', userSocket.userId);
+      });
 
     });
 

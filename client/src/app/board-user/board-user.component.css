@@ -10,6 +10,7 @@
 }
 .name {
   font-weight: bold;
+  padding-right: 10px;
 }
 .message {
   color: gray;
@@ -64,6 +65,14 @@
 }
 .unread {
   color: lightgray;
+}
+
+.logged-in {
+  color: green;
+}
+
+.logged-out {
+  color: red;
 }
 
 

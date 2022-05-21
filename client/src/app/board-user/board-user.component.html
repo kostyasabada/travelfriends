@@ -7,8 +7,10 @@
       </div>
       <div *ngFor="let user of users">
         <div class="row contact-container" (click)="onUserSelect(user)">
-          <div class="col-9">
+          <div class="col-9" style="display: flex;">
             <div class="name">{{user.name}}</div>
+            <div *ngIf="user.online" class="logged-in">●</div>
+            <div *ngIf="!user.online" class="logged-out">●</div>
           </div>
         </div>
       </div>
