@@ -33,7 +33,9 @@ export class BoardUserComponent implements OnInit {
 
     this.userService.onlineUsersSubject.subscribe(
       (data: any) => {
+        if(data) {
           this.users = data.filter((user:UserInterface) => user.name !== this.currentUser?.name);
+        }
       }
     );
 
