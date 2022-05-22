@@ -55,6 +55,10 @@ export class UserService {
     })
   }
 
+  sendMessage(message: any) {
+    this.socket.emit('send_message', message)
+  }
+
   logOut(user: any) {
     this.socket.emit('user_logout', user.name)
   }

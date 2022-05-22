@@ -14,11 +14,8 @@ export class BoardUserComponent implements OnInit {
   selectedUser: any = null;
 
 
-  chatData?: Array<any>;
+  chatData: Array<any> = [];
   message?: String;
-  session: any;
-  dialogId: any;
-  userDetails: any;
   messageObj: any;
 
   constructor(
@@ -46,6 +43,10 @@ export class BoardUserComponent implements OnInit {
 
       }
     );
+
+    this.socket.on('get_message', (message: any) => {
+      this.chatData.push(message);
+    })
   }
 
 
@@ -53,8 +54,7 @@ export class BoardUserComponent implements OnInit {
     this.selectedUser = connectedUser;
   }
 
-  onEnter(selectedUseName: any, message: any) {
-    console.log(selectedUseName, message);
+  onEnter(selectedUseName: any, message: any, socketId: string) {
 
     this.messageObj = {
       message,
@@ -64,15 +64,9 @@ export class BoardUserComponent implements OnInit {
     }
 
     console.log(this.messageObj);
+    this.chatData?.push(this.messageObj)
 
-    // this.socket.on('newMessage', (data: any) => {
-    //   console.log(data);
-      
-    // })
-    // this.socket.on('onlineUsers', (users: any) => {
-    //   console.log(users);
-      
-    // })
+    this.userService.sendMessage(this.messageObj);
 
     this.message = '';
   }

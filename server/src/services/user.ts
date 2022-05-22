@@ -1,8 +1,9 @@
 import { injectable } from 'inversify';
 import User from 'src/database/models/user';
+import { UserInterface } from 'src/interfaces/user.interface';
 
 export interface IUserService {
-  loginUser(user:any): any;
+  loginUser(credentials: {username: string, password: string}): Promise<UserInterface | undefined>;
 }
 
 
@@ -10,7 +11,7 @@ export interface IUserService {
 class UserService implements IUserService {
   public constructor() {}
 
-  public async loginUser(credentials: any) {
+  public async loginUser(credentials: {username: string, password: string}): Promise<UserInterface | undefined> {
     const { username, password } = credentials;
 
     try {
@@ -20,7 +21,7 @@ class UserService implements IUserService {
       });
 
       if(!fetchedUser) {
-        return
+        return;
       }
 
       const accessToken = Buffer.from(`${fetchedUser.name}:${fetchedUser.password}`).toString('base64');

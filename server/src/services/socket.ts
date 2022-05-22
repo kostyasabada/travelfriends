@@ -35,11 +35,13 @@ class SocketService implements ISocketService {
     let users = fetchedUsers.map(user => {
       return {
         name: user.name,
-        emai: user.email,
+        email: user.email,
         online: false
       }
     })
-    
+
+    let sessionsMap: any = {}
+
     this.socket = io.on('connection', (userSocket: any) => {
 
       console.log('IO Connected');
@@ -56,7 +58,8 @@ class SocketService implements ISocketService {
           if (man.name === user.name) {
             return {
               ...man,
-              online: true
+              online: true,
+              socketId: userSocket.id
             }
           } else {
             return man
@@ -66,6 +69,9 @@ class SocketService implements ISocketService {
 
         userSocket.emit('user_is_loginned', user);
         this.socket.emit('got_user_list', users);
+
+        sessionsMap[user.name] = userSocket.id;
+
       })
 
 
@@ -79,7 +85,8 @@ class SocketService implements ISocketService {
           if (man.name === userName) {
             return {
               ...man,
-              online: false
+              online: false,
+              socketId: null
             }
           } else {
             return man
@@ -94,7 +101,8 @@ class SocketService implements ISocketService {
           if (man.name === userSocket.userId) {
             return {
               ...man,
-              online: false
+              online: false,
+              socketId: null
             }
           } else {
             return man
@@ -103,6 +111,14 @@ class SocketService implements ISocketService {
 
         this.socket.emit('got_user_list', users);
       });
+
+
+      userSocket.on('send_message', (message: any) => {
+        console.log(message);
+        console.log(sessionsMap[message.reciever]);
+
+        this.socket.to(sessionsMap[message.reciever]).emit('get_message', message);
+      })
 
     });
 

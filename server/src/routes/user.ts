@@ -79,7 +79,7 @@ class UserController implements IController {
       const users = fetchedUsers.map(user => {
         return {
           name: user.name,
-          emai: user.email
+          email: user.email
         }
       })
 
