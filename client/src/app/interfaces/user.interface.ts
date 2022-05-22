@@ -2,5 +2,6 @@ export interface UserInterface {
   name: string,
   password: string,
   email: string,
-  socketId?: string
+  socketId?: string,
+  online?: boolean
 }

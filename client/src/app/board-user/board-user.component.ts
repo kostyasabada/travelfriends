@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { MessageIterface } from '../interfaces/message.intraface';
+import { UserInterface } from '../interfaces/user.interface';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
 
@@ -9,14 +11,14 @@ import { UserService } from '../_services/user.service';
   styleUrls: ['./board-user.component.css']
 })
 export class BoardUserComponent implements OnInit {
-  users?: any;
-  currentUser: any
-  selectedUser: any = null;
+  users?: UserInterface[];
+  currentUser: UserInterface | null = null
+  selectedUser: UserInterface | null = null;
 
 
   chatData: Array<any> = [];
   message?: String;
-  messageObj: any;
+  messageObj?: MessageIterface;
 
   constructor(
     private token: TokenStorageService,
@@ -31,10 +33,8 @@ export class BoardUserComponent implements OnInit {
 
     this.userService.onlineUsersSubject.subscribe(
       (data: any) => {
-        console.log(data);
-        // window.location.reload();
         if (data) {
-          this.users = data.filter((user:any) => user.name !== this.currentUser.name)
+          this.users = data.filter((user:UserInterface) => user.name !== this.currentUser?.name)
 
         } else {
           // this.errorMessage = 'Not found';
@@ -44,26 +44,25 @@ export class BoardUserComponent implements OnInit {
       }
     );
 
-    this.socket.on('get_message', (message: any) => {
+    this.socket.on('get_message', (message: MessageIterface) => {
       this.chatData.push(message);
     })
   }
 
 
-  onUserSelect(connectedUser: any) {
+  onUserSelect(connectedUser: UserInterface) {
     this.selectedUser = connectedUser;
   }
 
-  onEnter(selectedUseName: any, message: any, socketId: string) {
+  onEnter(selectedUseName: string, message: any) {
 
     this.messageObj = {
       message,
-      sender: this.currentUser.name,
-      reciever: selectedUseName,
+      sender: (this.currentUser as UserInterface).name,
+      receiver: selectedUseName,
       date: Date.now()
     }
 
-    console.log(this.messageObj);
     this.chatData?.push(this.messageObj)
 
     this.userService.sendMessage(this.messageObj);

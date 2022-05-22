@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
 
     this.userService.loginnedUserSubject.subscribe(
       (data: any) => {
-        console.log(data);
         if (data) {
           this.tokenStorage.saveToken(data.accessToken);
           this.tokenStorage.saveUser(data);

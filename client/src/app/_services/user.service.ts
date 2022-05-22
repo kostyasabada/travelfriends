@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UrlsService } from './urls.service';
 import { Socket } from 'ngx-socket-io';
+import { UserInterface } from '../interfaces/user.interface';
+import { MessageIterface } from '../interfaces/message.intraface';
 
 
 const httpOptions = {
@@ -13,8 +15,8 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-  loginnedUserSubject: BehaviorSubject<any> = new BehaviorSubject(null);
-  onlineUsersSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+  loginnedUserSubject = new BehaviorSubject<UserInterface | null>(null);
+  onlineUsersSubject = new BehaviorSubject<UserInterface[] | null>(null);
 
 
   constructor(
@@ -29,7 +31,7 @@ export class UserService {
       password
     });
 
-    this.socket.on('user_is_loginned', (loginedUser: any) => {
+    this.socket.on('user_is_loginned', (loginedUser:  UserInterface) => {
       this.loginnedUserSubject.next(loginedUser);
     })
 
@@ -39,27 +41,27 @@ export class UserService {
 
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(this.urlsService.Api.SIGNUP, {
+  register(username: string, email: string, password: string): Observable<UserInterface> {
+    return this.http.post<UserInterface> (this.urlsService.Api.SIGNUP, {
       username,
       email,
       password
-    }, httpOptions);
+    });
   }
 
   userList() {
     this.socket.emit('get_user_list');
 
-    this.socket.on('got_user_list', (users: any) => {
+    this.socket.on('got_user_list', (users: UserInterface[]) => {
       this.onlineUsersSubject.next(users);
     })
   }
 
-  sendMessage(message: any) {
+  sendMessage(message: MessageIterface) {
     this.socket.emit('send_message', message)
   }
 
-  logOut(user: any) {
+  logOut(user: UserInterface) {
     this.socket.emit('user_logout', user.name)
   }
 }

@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import { IUserService } from './user';
 import { TYPES } from '@types';
 import User from 'src/database/models/user';
+import { MessageIterface } from 'src/interfaces/message.interface';
 
 export interface ISocketService {
   socket: any;
@@ -28,7 +29,7 @@ class SocketService implements ISocketService {
       
     );
 
-    console.log('SocketServer::::');
+    console.log('SocketServer');
 
     const fetchedUsers = await User.find();
 
@@ -46,7 +47,7 @@ class SocketService implements ISocketService {
 
       console.log('IO Connected');
 
-      userSocket.on('user_login', async (credentials:any) => {
+      userSocket.on('user_login', async (credentials: any) => {
         const user = await this._userService.loginUser(credentials);
         if(!user) {
           userSocket.emit('user_not_found', 'user_not_found');
@@ -113,11 +114,8 @@ class SocketService implements ISocketService {
       });
 
 
-      userSocket.on('send_message', (message: any) => {
-        console.log(message);
-        console.log(sessionsMap[message.reciever]);
-
-        this.socket.to(sessionsMap[message.reciever]).emit('get_message', message);
+      userSocket.on('send_message', (message: MessageIterface) => {
+        this.socket.to(sessionsMap[message.receiver]).emit('get_message', message);
       })
 
     });

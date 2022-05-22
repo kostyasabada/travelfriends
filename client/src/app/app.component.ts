@@ -22,7 +22,6 @@ export class AppComponent {
 
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
-      console.log(user);
 
       this.userService.login(user.name, user.password)
 

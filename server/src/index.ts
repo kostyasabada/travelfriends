@@ -19,7 +19,7 @@ loadEnv(
 
   async function Start() {
     const diContainer = await (await import('./inversify.config')).diContainer;
-    console.log('Serveeeeeeeeeeeer');
+    console.log('Server');
     
     const server = diContainer.get<IServer>(TYPES.Server);
     server.start();

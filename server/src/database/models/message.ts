@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const message = new Schema({
   message: String,
   sender: String,
-  reciever: String,
+  receiver: String,
   date: Date
 })
 
