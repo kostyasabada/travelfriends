@@ -33,20 +33,27 @@ export class BoardUserComponent implements OnInit {
 
     this.userService.onlineUsersSubject.subscribe(
       (data: any) => {
-        if (data) {
-          this.users = data.filter((user:UserInterface) => user.name !== this.currentUser?.name)
-
-        } else {
-          // this.errorMessage = 'Not found';
-          // this.isLoginFailed = true;
-        }
-
+          this.users = data.filter((user:UserInterface) => user.name !== this.currentUser?.name);
       }
     );
 
     this.socket.on('get_message', (message: MessageIterface) => {
       this.chatData.push(message);
+
+      if(document.hidden) {
+        this.sendNotification(message)
+      }
     })
+  }
+
+  async sendNotification(message: MessageIterface) {
+      if (!("Notification" in window)) {
+          return console.error("This browser does not support desktop notification");
+      }
+      const { permission, requestPermission } = Notification;
+      if (permission === "granted" || (permission !== "denied" && (await requestPermission()) === "granted")) {
+          const notification = new Notification(`${message.sender}: ${message.message}`);
+      }
   }
 
 
