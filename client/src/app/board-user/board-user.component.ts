@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import {Peer, MediaConnection} from 'peerjs';
 import { MessageIterface } from '../interfaces/message.intraface';
 import { UserInterface } from '../interfaces/user.interface';
 import { TokenStorageService } from '../_services/token-storage.service';
@@ -19,6 +20,10 @@ export class BoardUserComponent implements OnInit {
   chatData: Array<any> = [];
   message?: String;
   messageObj?: MessageIterface;
+  peer: any;
+  @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
+  mediaCall!: MediaConnection
 
   constructor(
     private token: TokenStorageService,
@@ -26,8 +31,41 @@ export class BoardUserComponent implements OnInit {
     private socket: Socket
     ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.currentUser = this.token.getUser();
+
+    //PeerJS wraps the browser's WebRTC implementation to provide a complete, configurable, and easy-to-use peer-to-peer connection API. Equipped with nothing but an ID, a peer can create a P2P data or media stream connection to a remote peer.
+
+    this.peer = new Peer(
+      `${this.currentUser?.name}`, {
+      host: 'localhost',
+      port: 4200,
+      path: '/peerjs'
+    });
+
+    this.socket.on('video_request', async (remotePeerId:string) => {
+      // The Navigator.mediaDevices read-only property returns a MediaDevices object, which provides access to connected media input devices like cameras and microphones, as well as screen sharing.
+      const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+
+      this.peer.connect(remotePeerId);
+
+        // Start a data connection by calling peer.connect with the peer ID of the destination peer.
+      // this.peer.connect(remotePeerId);
+
+      // Call a peer, providing our mediaStream
+      this.mediaCall = this.peer.call(remotePeerId, stream);
+  
+      // Here you'd add `stream` to an HTML video element.
+      this.localVideo.nativeElement.srcObject = stream;
+
+        	//receive the `stream` is the MediaStream of the remote peer.
+      this.mediaCall.on('stream', (remoteStream) => {
+
+          	 // Here you'd add `stream` to an HTML video element.
+        this.remoteVideo.nativeElement.srcObject = remoteStream;
+      });
+ 
+    })
 
     this.userService.userList();
 
@@ -46,6 +84,31 @@ export class BoardUserComponent implements OnInit {
         this.sendNotification(message)
       }
     })
+  }
+
+  async startVideo() {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+    this.localVideo.nativeElement.srcObject = stream;
+
+    this.socket.emit('video_connect', {sender: this.currentUser?.name, receiver: this.selectedUser?.name});
+
+    //now going to server and check, then to oninit it receive
+
+
+      //we shoul receive on call
+    this.peer.on('call', async (call: any) => {
+
+        this.mediaCall = call;
+    // Answer the call by providing our mediaStream
+        this.mediaCall.answer(stream);
+
+        	//receive the `stream` is the MediaStream of the remote peer.
+        this.mediaCall.on('stream', (remoteStream) => {
+          	 // Here you'd add `stream` to an HTML video element.
+          this.remoteVideo.nativeElement.srcObject = remoteStream;
+        });
+    });
+
   }
 
   async sendNotification(message: MessageIterface) {

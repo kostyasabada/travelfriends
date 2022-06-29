@@ -27,6 +27,7 @@
             {{item.message}}
             </div>
         </div>
+        <button (click)="startVideo()">video</button>
       </div>
       <div class="input-msg">
         <div class="form-group">
@@ -38,4 +39,8 @@
       Go ahead & select a contact!
     </div>
   </div>
+      <div>
+        <video #remoteVideo id="remote-video" autoplay></video>
+        <video #localVideo id="local-video" autoplay></video>
+      </div>
 </div>

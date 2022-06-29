@@ -118,6 +118,10 @@ class SocketService implements ISocketService {
         this.socket.to(sessionsMap[message.receiver]).emit('get_message', message);
       })
 
+      userSocket.on('video_connect', (video: any) => {
+        this.socket.to(sessionsMap[video.receiver]).emit('video_request', video.sender);
+      })
+
     });
 
   }

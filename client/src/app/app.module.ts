@@ -18,18 +18,6 @@ import { BoardUserComponent } from './board-user/board-user.component';
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 
-// const apiRoot = 'api';
-// const config: SocketIoConfig = { url: `${location.origin}`, options: {
-//   path: `/${apiRoot}/ws2`
-// } };
-
-// const apiRoot = 'api';
-// const config: SocketIoConfig = { url: '',
-//   options: {
-//     path: `/${apiRoot}1`
-//   }
-// };
-
 
 const config: SocketIoConfig = { url: '',
   options: {

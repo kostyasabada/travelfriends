@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import chalk from 'chalk';
 import cors from 'cors';
 import { createServer } from 'http';
+import { ExpressPeerServer } from 'peer';
 
 import { errorMiddleware } from './middlewares/error';
 import { IController } from './interfaces';
@@ -12,6 +13,7 @@ import { ISocketService } from './services/socket';
 @injectable()
 class Server {
   Socket: any
+  Peer: any
   private _baseRouter: IController;
   private _socketService: ISocketService;
 
@@ -61,6 +63,12 @@ class Server {
 
       this.Socket = await this._socketService.createSocketServer(server);
 
+      const peerServer = ExpressPeerServer(server, {
+        path: '/',
+        port,
+      })
+
+      app.use('/peerjs', peerServer);
       server.listen(port, () => {console.log(`${chalk.green('Express server started')} on port: ${port}`)})
 
     } catch (e) {
